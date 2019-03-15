@@ -1,5 +1,5 @@
 [all]
 merchantly
 
-[merchantly:children]
-all
+[merchantly]
+merchantly
