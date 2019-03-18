@@ -28,19 +28,19 @@ roles_path ?= "roles/"
 env        ?= hosts.ini
 mkfile_dir ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 ifeq ("$(wildcard $(mkfile_dir)pass.sh)", "")
-  opts     ?= $(args)
+	opts     ?= $(args)
 else # Handle vault password if any
-  ifeq ("$(shell $(mkfile_dir)pass.sh 2> /dev/null)", "")
-    opts     ?= $(args)
-  else
-    opts     ?= $(args) --vault-password-file=$(mkfile_dir)pass.sh
-  endif
+	ifeq ("$(shell $(mkfile_dir)pass.sh 2> /dev/null)", "")
+		opts     ?= $(args)
+	else
+		opts     ?= $(args) --vault-password-file=$(mkfile_dir)pass.sh
+	endif
 endif
 ifneq ("$(limit)", "")
-  opts     := $(opts) --limit="$(limit)"
+	opts     := $(opts) --limit="$(limit)"
 endif
 ifneq ("$(tag)", "")
-  opts     := $(opts) --tag="$(tag)"
+	opts     := $(opts) --tag="$(tag)"
 endif
 
 ##
@@ -48,83 +48,83 @@ endif
 ##
 .PHONY: install
 install: ## make install [roles_path=roles/] # Install roles dependencies
-  @ansible-galaxy install --roles-path="$(roles_path)" --role-file="requirements.yml"
+	@ansible-galaxy install --roles-path="$(roles_path)" --role-file="requirements.yml"
 
 .PHONY: inventory
 inventory: ## make inventory [provider=<ec2|gce...>] [env=hosts] # Download dynamic inventory from Ansible's contrib
-  @wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/$(provider).py
-  @chmod +x $(provider).py
-  mv $(provider).py $(env)
+	@wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/$(provider).py
+	@chmod +x $(provider).py
+	mv $(provider).py $(env)
 
 .PHONY: lint
 lint: ## make lint [playbook=setup] [env=hosts] [args=<ansible-playbook arguments>] # Check syntax of a playbook
-  @env=$(env) ansible-playbook --inventory-file="$(env)" --syntax-check $(opts) "$(playbook).yml"
+	@env=$(env) ansible-playbook --inventory-file="$(env)" --syntax-check $(opts) "$(playbook).yml"
 
 .PHONY: debug
 debug: mandatory-host-param ## make debug host=hostname [env=hosts] [args=<ansible arguments>] # Debug a host's variable
-  @env=$(env) ansible -i $(env) $(opts) -m setup $(host)
-  @env=$(env) ansible --inventory-file="$(env)" $(opts) --module-name="debug" --args="var=hostvars[inventory_hostname]" $(host)
+	@env=$(env) ansible -i $(env) $(opts) -m setup $(host)
+	@env=$(env) ansible --inventory-file="$(env)" $(opts) --module-name="debug" --args="var=hostvars[inventory_hostname]" $(host)
 
 .PHONY: dry-run
 dry-run: ## make dry-run [playbook=setup] [env=hosts] [tag=<ansible tag>] [limit=<ansible host limit>] [args=<ansible-playbook arguments>] # Run a playbook in dry run mode
-  @env=$(env) ansible-playbook --inventory-file="$(env)" --diff --check $(opts) "$(playbook).yml"
+	@env=$(env) ansible-playbook --inventory-file="$(env)" --diff --check $(opts) "$(playbook).yml"
 
 .PHONY: run
 run: ## make run [playbook=setup] [env=hosts] [tag=<ansible tag>] [limit=<ansible host limit>] [args=<ansible-playbook arguments>] # Run a playbook
-  @env=$(env) ansible-playbook --inventory-file="$(env)" --diff $(opts) "$(playbook).yml"
+	@env=$(env) ansible-playbook --inventory-file="$(env)" --diff $(opts) "$(playbook).yml"
 
 group ?=all
 .PHONY: list
 list: ## make list [group=all] [env=hosts] # List hosts inventory
-  @env=$(env) ansible --inventory-file="$(env)" $(group) --list-hosts
+	@env=$(env) ansible --inventory-file="$(env)" $(group) --list-hosts
 
 .PHONY: vault
 vault: mandatory-file-param ## make vault file=/tmp/vault.yml [env=hosts] [args=<ansible-vault arguments>] # Edit or create a vaulted file
-  @[ -f "$(file)" ] && env=$(env) ansible-vault $(opts) edit "$(file)" || \
-  env=$(env) ansible-vault $(opts) create "$(file)"
+	@[ -f "$(file)" ] && env=$(env) ansible-vault $(opts) edit "$(file)" || \
+	env=$(env) ansible-vault $(opts) create "$(file)"
 
 .PHONY: console
 console: ## make console [env=hosts] [args=<ansible-console arguments>] # Run an ansible console
-  @env=$(env) ansible-console --inventory-file="$(env)" $(opts)
+	@env=$(env) ansible-console --inventory-file="$(env)" $(opts)
 
 group ?=all
 .PHONY: facts
 facts: ## make facts [group=all] [env=hosts] [args=<ansible arguments>] # Gather facts from your hosts
-  @env=$(env) ansible --module-name="setup" --inventory-file="$(env)" $(opts) --tree="out/" $(group)
+	@env=$(env) ansible --module-name="setup" --inventory-file="$(env)" $(opts) --tree="out/" $(group)
 
 .PHONY: cmdb
 cmdb: ## make cmdb # Create HTML inventory report
-  @ansible-cmdb "out/" > list-servers.html
+	@ansible-cmdb "out/" > list-servers.html
 
 .PHONY: bootstrap
 bootstrap: ## make bootstrap # Install ansible (Debian/Ubuntu only)
-  @sudo apt-get update \
-    && sudo apt-get install python3-pip git sshpass \
-    && sudo pip3 install --upgrade pip \
-    && sudo pip install --upgrade virtualenv \
-    && (test -d ~/python_virtualenvs || mkdir ~/python_virtualenvs) \
-    && (test -d ~/python_virtualenvs/ansible || virtualenv ~/python_virtualenvs/ansible) \
-    && source ~/python_virtualenvs/ansible/bin/activate \
-    && pip3 install --upgrade ansible ansible-modules-hashivault \
-    && deactivate \
-    && echo "Run 'make activate' to enable the python virtual environment with ansible installed."
-    
+	@sudo apt-get update \
+		&& sudo apt-get install python3-pip git sshpass \
+		&& sudo pip3 install --upgrade pip \
+		&& sudo pip install --upgrade virtualenv \
+		&& (test -d ~/python_virtualenvs || mkdir ~/python_virtualenvs) \
+		&& (test -d ~/python_virtualenvs/ansible || virtualenv ~/python_virtualenvs/ansible) \
+		&& source ~/python_virtualenvs/ansible/bin/activate \
+		&& pip3 install --upgrade ansible ansible-modules-hashivault \
+		&& deactivate \
+		&& echo "Run 'make activate' to enable the python virtual environment with ansible installed."
+
 .PHONY: activate
 activate: ## make activate # Activate python virtual environment with ansible installed
-  @source ~/python_virtualenvs/ansible/bin/activate \
-    && echo "Run 'make deactivate' to deactivate python virtual environment."
-  
+	@source ~/python_virtualenvs/ansible/bin/activate \
+		&& echo "Run 'make deactivate' to deactivate python virtual environment."
+	
 .PHONY: deactivate
 deactivate: ## make deactivate # Deactivate python virtual environment with ansible installed
-  @deactivate
+	@deactivate
 
 .PHONY: mandatory-host-param mandatory-file-param
 mandatory-host-param:
-  @[ ! -z $(host) ]
+	@[ ! -z $(host) ]
 mandatory-file-param:
-  @[ ! -z $(file) ]
+	@[ ! -z $(file) ]
 
 help:
-  @grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .DEFAULT_GOAL := help
