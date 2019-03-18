@@ -23,7 +23,7 @@
 ##
 # VARIABLES
 ##
-playbook   ?= main.yml
+playbook   ?= main
 roles_path ?= "roles/"
 env        ?= hosts.ini
 mkfile_dir ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -103,20 +103,11 @@ bootstrap: ## make bootstrap # Install ansible (Debian/Ubuntu only)
 		&& sudo pip3 install --upgrade pip \
 		&& sudo pip install --upgrade virtualenv \
 		&& (test -d ~/python_virtualenvs || mkdir ~/python_virtualenvs) \
-		&& (test -d ~/python_virtualenvs/ansible || virtualenv ~/python_virtualenvs/ansible) \
-		&& source ~/python_virtualenvs/ansible/bin/activate \
+		&& (test -f ~/python_virtualenvs/ansible/bin/activate || virtualenv ~/python_virtualenvs/ansible) \
+		&& . ~/python_virtualenvs/ansible/bin/activate \
 		&& pip3 install --upgrade ansible ansible-modules-hashivault \
-		&& deactivate \
-		&& echo "Run 'make activate' to enable the python virtual environment with ansible installed."
-
-.PHONY: activate
-activate: ## make activate # Activate python virtual environment with ansible installed
-	@source ~/python_virtualenvs/ansible/bin/activate \
-		&& echo "Run 'make deactivate' to deactivate python virtual environment."
-	
-.PHONY: deactivate
-deactivate: ## make deactivate # Deactivate python virtual environment with ansible installed
-	@deactivate
+		&& echo "Run the following command in your shell to activate a virtual environment with the ansible installed:" \
+    && echo ". ~/python_virtualenvs/ansible/bin/activate"
 
 .PHONY: mandatory-host-param mandatory-file-param
 mandatory-host-param:
