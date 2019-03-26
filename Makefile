@@ -108,7 +108,7 @@ bootstrap: ## make bootstrap # Install ansible (Debian/Ubuntu only)
 		&& (test -d ~/python_virtualenvs || mkdir ~/python_virtualenvs) \
 		&& (test -f ~/python_virtualenvs/ansible/bin/activate || virtualenv ~/python_virtualenvs/ansible) \
 		&& . ~/python_virtualenvs/ansible/bin/activate \
-		&& pip3 install --upgrade ansible ansible-modules-hashivault \
+		&& pip3 install --upgrade ansible ansible-modules-hashivault jmespath \
 		&& echo "Run the following command in your shell to activate a virtual environment with the ansible installed:" \
     && echo ". ~/python_virtualenvs/ansible/bin/activate"
 
