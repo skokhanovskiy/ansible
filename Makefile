@@ -48,6 +48,10 @@ endif
 .PHONY: install
 install: ## make install # Install roles dependencies
 	@ansible-galaxy install --role-file="requirements.yml"
+  
+.PHONY: install-submodules
+install: ## make install-submodules # Install roles as submodules
+	@git submodule update --init
 
 .PHONY: inventory
 inventory: ## make inventory [provider=<ec2|gce...>] [env=hosts] # Download dynamic inventory from Ansible's contrib
