@@ -15,12 +15,15 @@
       - python-pip
     state: present
 
+- name: gather information about installed packages
+  package_facts:
+
 - name: ensure pip packages are installed
   pip:
     name:
       - thumbor
       - thumbor_text_filter    
-    executable: pip2
+    executable: "{{ 'pip' if 'python3-pip' not in ansible_facts.packages else 'pip2' }}"
 
 - name: ensure thumbor is configured
   template:
