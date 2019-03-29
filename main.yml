@@ -5,3 +5,4 @@
 - import_playbook: elasticsearch.yml
 - import_playbook: redis.yml
 - import_playbook: imagemagic.yml
+
