@@ -27,11 +27,11 @@ postgresql_users:
     pass: "{{ merchantly_db_password }}"
     encrypted: no
 postgresql_databases:
-  - name:   "{{ merchantly_db_name }}"
+  - name: "{{ merchantly_db_name }}"
     owner: postgres
 postgresql_user_privileges:
   - name: "{{ merchantly_db_user }}"
-    db:   "{{ merchantly_db_name }}"
+    db: "{{ merchantly_db_name }}"
     priv: "ALL"
 postgresql_database_extensions:
   - db: "{{ merchantly_db_name }}"
@@ -56,7 +56,7 @@ postgresql_pg_hba_default:
     user: all
     address: ""
     method: "{{ postgresql_default_auth_method }}"
-    comment: ""local" is for Unix domain socket connections only"
+    comment: "\"local\" is for Unix domain socket connections only"
   - type: host
     database: all
     user: all
