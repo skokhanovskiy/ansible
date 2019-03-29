@@ -26,5 +26,5 @@ thumbor_security_key: "{{ merchantly_thumbor_security_key }}"
 thumbor_allowed_sources_site_name:
   - "{{ merchantly_site_name | replace('.', '\\.') }}"
   - ".+\\.{{ merchantly_site_name | replace('.', '\\.') }}"
-thumbor_allowed_sources_s3: "{{ [] if merchantly_static_s3 | default('') == '' else [merchantly_static_s3 | replace('.', '\\.')]"
+thumbor_allowed_sources_s3: "{{ [] if merchantly_static_s3 | default('') == '' else [merchantly_static_s3 | replace('.', '\\.')] }}"
 thumbor_allowed_sources: "{{ thumbor_allowed_sources_site_name + thumbor_allowed_sources_s3 }}"
