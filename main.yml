@@ -6,4 +6,3 @@
 - import_playbook: redis.yml
 - import_playbook: imagemagic.yml
 - import_playbook: thumbor.yml
-
