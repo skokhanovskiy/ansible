@@ -16,6 +16,13 @@
   notify:
     - reload nginx
     
+- name: ensure default site is disabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify:
+    - reload nginx
+    
 - name: ensure nginx cache directories are exists
   file:
     path: "/var/cache/nginx/{{ item }}"
