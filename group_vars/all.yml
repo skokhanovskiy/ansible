@@ -80,3 +80,11 @@ postgresql_wal_buffers: 16MB
 postgresql_maintenance_work_mem: 128MB
 postgresql_checkpoint_completion_target: 0.7
 postgresql_default_statistics_target: 100
+
+thumbor_ports: "{{ range(8881, 8881 + merchantly_thumbor_count | default(3), 1) | list }}"
+thumbor_security_key: "{{ merchantly_thumbor_security_key }}"
+thumbor_allowed_sources_site_name:
+  - "{{ merchantly_site_name | replace('.', '\\.') }}"
+  - ".+\\.{{ merchantly_site_name | replace('.', '\\.') }}"
+thumbor_allowed_sources_s3: "{{ [] if merchantly_static_s3 | default('') == '' else [merchantly_static_s3 | replace('.', '\\.')] }}"
+thumbor_allowed_sources: "{{ thumbor_allowed_sources_site_name + thumbor_allowed_sources_s3 }}"

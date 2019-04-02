@@ -18,3 +18,16 @@ merchantly_db_user: "{{ merchantly_user }}"
 
 # How much memory can database use in megabytes. Default is 1/4 of total server memory.
 #merchantly_db_max_memory: 4096
+
+# Site DNS name
+merchantly_site_name: example.com
+
+# Number of thumbor services that will be started. Default is 3.
+#merchantly_thumbor_count: 3
+
+# Thumber security key to prevent tampering with the url.
+# https://thumbor.readthedocs.io/en/latest/security.html#stopping-tampering
+merchantly_thumbor_security_key: fDGZdT84C9sJWUpgo1xRG4bHyQ8sCjyu
+
+# Hostname of the AWS S3 bucket where static files are placed
+#merchantly_static_s3: mybacket.s3.eu-central-1.amazonaws.com
